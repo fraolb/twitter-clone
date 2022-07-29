@@ -1,9 +1,18 @@
-import React from 'react'
-import './Feed.css'
-import TweetBox from './TweetBox'
-import Post from './Post'
+import React, { useEffect, useState } from 'react';
+import './Feed.css';
+import TweetBox from './TweetBox';
+import Post from './Post';
+import img from "./pic.JPG";
+import db from './firebase';
+import FlipMove from 'react-flip-move'
 
 const Feed = () => {
+  const [posts, setPosts]= useState([]);
+  useEffect(()=>{
+    db.collection('posts').onSnapshot(snapshot =>(
+      setPosts(snapshot.docs.map(doc=>doc.data()))
+    ))
+  },[]);
   return (
     <div className='feed'>
          {/* Header */}       
@@ -13,22 +22,31 @@ const Feed = () => {
        
         {/* TweetBox */}
         <TweetBox />
+        <FlipMove>
+            {posts.map((post)=>(
+              <Post 
+              key={post.text}
+              displayName={post.displayName}
+              username={post.username}
+              verified={post.verified}
+              text={post.text}
+              avatar={post.avatar}
+              image={post.image}
+            />
+            
+            ))}
+        </FlipMove>
 
         {/* Post */}
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-
-        {/* Post */}
-        {/* Post */}
-        {/* Post */}
-        {/* Post */}
-        {/* Post */}
-        {/* Post */}
-        {/* Post */}
+        {/* <Post  
+          displayName="fRAOL B."
+          username="fraolchris"
+          verified={true}
+          text=" yoo its working!!!"
+          avatar="https://picsum.photos/200"
+          image="https://picsum.photos/200/300"
+        /> */}
+       
     </div>
   )
 }
